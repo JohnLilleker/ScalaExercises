@@ -18,9 +18,11 @@ object Game {
 
       val element1 = p1.play
       val element2 = p2.play
+      val stab1 = p1.boost(element1)
+      val stab2 = p2.boost(element2)
 
-      println(s"$element1 vs $element2")
-      val result = Elements.compareElements(element1, element2)
+      println(s"$element1${if (stab1>0) "*" else ""} vs $element2${if (stab2>0) "*" else ""}")
+      val result = Elements.compareElements(element1, element2, stab1, stab2)
 
       if (result.nonEmpty) {
         if (result.get == element1) {

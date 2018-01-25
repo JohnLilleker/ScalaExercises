@@ -11,7 +11,6 @@ def LCSStr(str1: String, str2: String) = {
       val sub = str1.substring(index, index+size)
       println("sub " + sub)
       if (str2.contains(sub)) {
-        // wrong, need to
         current_sub.append(str1.charAt(index+size-1))
         size += 1
       }
@@ -21,6 +20,7 @@ def LCSStr(str1: String, str2: String) = {
         if (current_sub.size > lcs.length) {
           lcs = current_sub.toString()
           current_sub.clear()
+          size = 0
         }
         index += 1
       }
@@ -38,7 +38,6 @@ LCSStr("Elephant", "Gigantic")
 LCSStr("chimpanzees", "humans")
 
 def LCSSeq(str1: String, str2: String) = {
-  // subsequence
 
 }
 

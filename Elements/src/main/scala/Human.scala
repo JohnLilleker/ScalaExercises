@@ -17,8 +17,11 @@ class Human(override val name: String) extends Player {
   }
 
   def getInput: String = {
-    for (i <- hand.indices)
-      println(s" $i > ${hand(i)}")
+    for (i <- hand.indices) {
+      print(s" $i > ${hand(i)}")
+      if (boost(hand(i)) > 0) print("*")
+      println
+    }
     readLine("Enter the element of choice: ")
   }
 
@@ -49,13 +52,16 @@ class Human(override val name: String) extends Player {
   def printHelp(): Unit = {
     println("\n -- Help menu --")
     println("The aim of the game is to get the opponent to use up all their elements")
-    println("You do so by winning a sort of enhanced version of rock, paper, scissors\n")
-    println("Winner is decided by Elemental strength")
+    println("You do so by winning mini duels with element 'cards'\n")
+    println("The card with the highest power wins. The face value can be augmented through 2 methods")
+    println("Elemental strength doubles the face value")
     println(" Fire > Earth")
     println(" Earth > Air")
     println(" Air > Water")
     println(" Water > Fire\n")
-    println("If the types don't match in that way, power (the number) is taken into account")
+    println("The other way is through your element, if you have one (the element in brackets next to your name).")
+    println("If it matches the element you cast, it gets a +3 strength boost (after strength is considered).")
+    println("This is also marked by the * next to the 'card'")
     println("Highest wins. Both lose in case of a draw\n")
   }
 }

@@ -1,9 +1,9 @@
 
-// case classes describing the 4 elements and a method for comparing them
+// case classes describing the 4 elements( + neutral) and a method for comparing them
 object Elements {
 
   sealed abstract class Element {
-    val power: Int
+    protected val power: Int
     def strength: Int = power
   }
 
@@ -18,51 +18,41 @@ object Elements {
   case class Neutral(override val power: Int) extends Element
 
   /**
-    * Compares 2 elements and returns which is stronger. In the case of elements being balanced, strength is taken into consideration
+    * Compares 2 elements and returns which is stronger. The strength is given by face value
     *
     * @param e1 the first element
     * @param e2 the second element
+    * @param boost1 an amount the player casting the first element can boost the power
+    * @param boost2 an amount the player casting the second element can boost the power
     * @return An optional of who won, or None if a draw
     */
-  def compareElements(e1: Element, e2: Element): Option[Element] = {
+  def compareElements(e1: Element, e2: Element, boost1: Int, boost2: Int): Option[Element] = {
 
-    def comp_strength(e1: Element, e2: Element): Option[Element] = {
-      if (e1.strength > e2.strength) Some(e1)
-      else if (e2.strength > e1.strength) Some(e2)
+    def comp_strength(e1: Element, boost1: Int, e2: Element, boost2: Int): Option[Element] = {
+      val pow1 = e1.strength + boost1
+      val pow2 = e2.strength + boost2
+      if (pow1 > pow2) Some(e1)
+      else if (pow2 > pow1) Some(e2)
       else None
     }
 
-    e1 match {
-      case Fire(_) =>
-        e2 match {
-          case Water(_) => Some(e2)
-          case Earth(_) => Some(e1)
-          case Air(_) | Fire(_) | Neutral(_) => comp_strength(e1, e2)
-          case _ => None
-        }
-      case Water(_) =>
-        e2 match {
-          case Air(_) => Some(e2)
-          case Fire(_) => Some(e1)
-          case Water(_) | Earth(_) | Neutral(_) => comp_strength(e1, e2)
-          case _ => None
-        }
-      case Earth(_) =>
-        e2 match {
-          case Fire(_) => Some(e2)
-          case Air(_) => Some(e1)
-          case Water(_) | Earth(_) | Neutral(_) => comp_strength(e1, e2)
-          case _ => None
-        }
-      case Air(_) =>
-        e2 match {
-          case Earth(_) => Some(e2)
-          case Water(_) => Some(e1)
-          case Air(_) | Fire(_) | Neutral(_) => comp_strength(e1, e2)
-          case _ => None
-        }
-      case Neutral(_) => comp_strength(e1, e2)
-      case _ => None
+    var strength1 = 0
+    var strength2 = 0
+    (e1, e2) match {
+      case (Fire(x), Earth(_)) => strength1 = x
+      case (Fire(_), Water(x)) => strength2 = x
+
+      case (Water(x), Fire(_)) => strength1 = x
+      case (Water(_), Air(x)) => strength2 = x
+
+      case (Earth(x), Air(_)) => strength1 = x
+      case (Earth(_), Fire(x)) => strength2 = x
+
+      case (Air(x), Water(_)) => strength1 = x
+      case (Air(_), Earth(x)) => strength2 = x
+
+      case _ =>
     }
+    comp_strength(e1, boost1 + strength1, e2, boost2 + strength2)
   }
 }

@@ -7,7 +7,7 @@ class ElementDeck {
   def create(): Unit = {
     for (i <- 1 to 10)
        elements = elements :+ Fire(i) :+ Water(i) :+ Earth(i) :+ Air(i)
-    for (i <- 1 to 8)
+    for (i <- 1 to 10)
       elements = elements :+ Neutral(i)
   }
 
